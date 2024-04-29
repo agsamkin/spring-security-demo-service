@@ -1,4 +1,4 @@
-package com.example.springsecuritydemoservice.exception;
+package com.example.springsecuritydemoservice.exception.custom;
 
 import jakarta.persistence.EntityNotFoundException;
 

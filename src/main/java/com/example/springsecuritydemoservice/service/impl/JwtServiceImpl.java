@@ -23,12 +23,14 @@ import java.util.function.Function;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-
     @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Value("${jwt.tokenExpiration}")
     private Duration tokenExpiration;
+
+    @Value("${jwt.refreshTokenExpiration}")
+    private Duration refreshTokenExpiration;
 
     @Override
     public String extractUsername(String token) {
@@ -41,24 +43,36 @@ public class JwtServiceImpl implements JwtService {
         return claimsResolver.apply(claims);
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(userDetails, new HashMap<>());
     }
 
+    @Override
     public String generateToken(UserDetails userDetails, Map<String, Object> extraClaims) {
+        return buildToken(userDetails, tokenExpiration, extraClaims);
+    }
+
+    @Override
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildToken(userDetails, refreshTokenExpiration, new HashMap<>());
+    }
+
+    @Override
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    private String buildToken(UserDetails userDetails, Duration expiration, Map<String, Object> extraClaims) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + tokenExpiration.toMillis()))
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(new Date().getTime() + expiration.toMillis()))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -70,17 +84,13 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-//        return Jwts.parserBuilder()
-//                .setSigningKey(getSignInKey())
-//                .build()
-//                .parseClaimsJwt(token)
-//                .getBody();
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token).getBody();
     }
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

@@ -29,9 +29,9 @@ spring:
         use_sql_comments: false
         format_sql: true
 
-springdoc:
-  swagger-ui:
-    path: /api-doc.html
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
 
 logging:
   level:

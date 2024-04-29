@@ -1,5 +1,6 @@
 package com.example.springsecuritydemoservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,8 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 import jakarta.persistence.Temporal;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -43,10 +44,19 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @NotBlank(message = "First name should not be empty")
+    @Column(name = "firstName")
+    private String firstName;
+
+    @NotBlank(message = "Last name should not be empty")
+    @Column(name = "lastName")
+    private String lastName;
+
     @NotBlank(message = "Username name should not be empty")
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @JsonIgnore
     @NotBlank(message = "Password should not be empty")
     @Size(min = 3, message = "Password should be greater than 3")
     @Column(name = "password")

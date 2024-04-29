@@ -15,6 +15,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class RegisterRequest {
+    @NotBlank(message = "First name should not be empty")
+    private String firstName;
+
+    @NotBlank(message = "Last name should not be empty")
+    private String lastName;
+
     @NotBlank(message = "Username name should not be empty")
     private String username;
 

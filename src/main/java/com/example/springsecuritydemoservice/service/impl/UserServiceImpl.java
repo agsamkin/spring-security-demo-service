@@ -1,7 +1,9 @@
 package com.example.springsecuritydemoservice.service.impl;
 
 import com.example.springsecuritydemoservice.dto.UserDto;
-import com.example.springsecuritydemoservice.exception.UserNotFoundException;
+import com.example.springsecuritydemoservice.dto.auth.ChangePasswordRequest;
+import com.example.springsecuritydemoservice.exception.custom.UserNotFoundException;
+import com.example.springsecuritydemoservice.exception.custom.WrongPasswordException;
 import com.example.springsecuritydemoservice.model.User;
 import com.example.springsecuritydemoservice.repository.UserRepository;
 import com.example.springsecuritydemoservice.service.UserService;
@@ -17,18 +19,11 @@ import java.util.List;
 
 @Transactional
 @RequiredArgsConstructor
-@Service
+@Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Transactional(readOnly = true)
-    @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found by username: " + username));
-    }
 
     @Transactional(readOnly = true)
     @Override
@@ -44,22 +39,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(UserDto userDto) {
-        User newUser = User.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword())).build();
-        return userRepository.save(newUser);
-    }
-
-    @Override
     public User updateUser(Long id, UserDto userDto) {
-        return userRepository.findById(id)
-                .map(u -> {
-                    u.setUsername(userDto.getUsername());
-                    u.setPassword(passwordEncoder.encode(userDto.getPassword()));
-                    return userRepository.save(u);
-                })
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found by id: " + id));
+
+        existingUser.setFirstName(userDto.getFirstName());
+        existingUser.setLastName(userDto.getLastName());
+        existingUser.setUsername(userDto.getUsername());
+
+        return userRepository.save(existingUser);
     }
 
     @Override
@@ -69,4 +57,20 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
+    @Override
+    public void changePassword(Long id, ChangePasswordRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found by id: " + id));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new WrongPasswordException("Wrong password");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new WrongPasswordException("Password are not the same");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
 }
