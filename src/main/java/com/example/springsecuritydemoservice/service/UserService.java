@@ -7,7 +7,7 @@ import com.example.springsecuritydemoservice.model.User;
 import java.util.List;
 
 public interface UserService {
-    List<User> getAll();
+    List<User> getAllUsers();
     User getUserById(Long id);
 
     User updateUser(Long id, UserDto userDto);

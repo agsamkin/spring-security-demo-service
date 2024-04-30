@@ -64,7 +64,7 @@ public class UserController {
     @PreAuthorize(HAS_ROLE_ADMIN)
     @GetMapping
     public List<User> getAll() {
-        return userService.getAll();
+        return userService.getAllUsers();
     }
 
     @SecurityRequirement(name = "JWT")

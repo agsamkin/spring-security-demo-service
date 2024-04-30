@@ -173,7 +173,7 @@ class AuthenticationServiceTest {
         assertThatThrownBy(() -> authenticationService.authenticate(authenticationRequest))
                 .isInstanceOf(UsernameNotFoundException.class)
                 .hasMessage("User not found by username: " + authenticationRequest.getUsername());
-        verify(userRepository).findByUsername(authenticationRequest.getUsername());
+        verify(userRepository).findByUsername(eq(authenticationRequest.getUsername()));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -231,7 +231,7 @@ class AuthenticationServiceTest {
         assertThatThrownBy(() -> authenticationService.refreshToken(httpServletRequest, httpServletResponse))
                 .isInstanceOf(UsernameNotFoundException.class)
                 .hasMessage("User not found by username: " + expectedUser.getUsername());
-        verify(userRepository).findByUsername(expectedUser.getUsername());
+        verify(userRepository).findByUsername(eq(expectedUser.getUsername()));
         verifyNoMoreInteractions(userRepository);
     }
 
