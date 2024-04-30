@@ -32,14 +32,14 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @Operation(summary = "Register")
+    @Operation(summary = "Register new user")
     @ApiResponse(responseCode = "200")
     @PostMapping("/register")
     public AuthenticationResponse register(@RequestBody RegisterRequest request) {
         return authenticationService.register(request);
     }
 
-    @Operation(summary = "Authenticate")
+    @Operation(summary = "Authenticate user")
     @ApiResponse(responseCode = "200")
     @PostMapping("/authenticate")
     public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest request) {

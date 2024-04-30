@@ -47,7 +47,7 @@ public class UserController {
     private final UserService userService;
 
     @SecurityRequirement(name = "JWT")
-    @Operation(summary = "Get user")
+    @Operation(summary = "Get user by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User was found"),
             @ApiResponse(responseCode = "404", description = "User with this id wasn`t found")
