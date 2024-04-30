@@ -1,5 +1,7 @@
 # Spring security demo service
 
+[![build and test](https://github.com/agsamkin/spring-security-demo-service/actions/workflows/build.yml/badge.svg)](https://github.com/agsamkin/spring-security-demo-service/actions/workflows/build.yml)
+
 Spring security demo service implement authentication and authorization using Spring Security and JWT.
 
 API documentation is available by clicking here: [http://host:port/swagger-ui.html]().
