@@ -2,8 +2,10 @@ package com.example.springsecuritydemoservice.service.impl;
 
 import com.example.springsecuritydemoservice.dto.UserDto;
 import com.example.springsecuritydemoservice.dto.auth.ChangePasswordRequest;
+
 import com.example.springsecuritydemoservice.exception.custom.UserNotFoundException;
 import com.example.springsecuritydemoservice.exception.custom.WrongPasswordException;
+
 import com.example.springsecuritydemoservice.model.User;
 import com.example.springsecuritydemoservice.repository.UserRepository;
 import com.example.springsecuritydemoservice.service.UserService;

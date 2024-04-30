@@ -46,12 +46,6 @@ public class BaseExceptionHandler {
         return getErrorResponse(exception.getMessage());
     }
 
-    @ResponseStatus(UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    public ErrorResponse authenticationExceptionHandler(AuthenticationException exception) {
-        return getErrorResponse(exception.getMessage());
-    }
-
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ErrorResponse validationExceptionsHandler(Exception exception) {
@@ -73,6 +67,12 @@ public class BaseExceptionHandler {
     @ResponseStatus(FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ErrorResponse accessDeniedException(AccessDeniedException exception) {
+        return getErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public ErrorResponse authenticationExceptionHandler(AuthenticationException exception) {
         return getErrorResponse(exception.getMessage());
     }
 
