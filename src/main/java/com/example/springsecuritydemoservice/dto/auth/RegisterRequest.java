@@ -1,23 +1,24 @@
 package com.example.springsecuritydemoservice.dto.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class RegisterRequest {
+    @JsonProperty("firstname")
     @NotBlank(message = "First name should not be empty")
     private String firstName;
 
+    @JsonProperty("lastname")
     @NotBlank(message = "Last name should not be empty")
     private String lastName;
 

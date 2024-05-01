@@ -8,6 +8,7 @@ import com.example.springsecuritydemoservice.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,14 +41,20 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Authenticate user")
-    @ApiResponse(responseCode = "200")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User has been authenticated"),
+            @ApiResponse(responseCode = "401", description = "User not authorized"),
+    })
     @PostMapping("/authenticate")
     public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest request) {
         return authenticationService.authenticate(request);
     }
 
     @Operation(summary = "Refresh token")
-    @ApiResponse(responseCode = "200")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Token has been refreshed"),
+            @ApiResponse(responseCode = "403", description = "Access to the requested resource is forbidden"),
+    })
     @PostMapping("/refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);

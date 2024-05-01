@@ -3,6 +3,7 @@ package com.example.springsecuritydemoservice.exception;
 import com.example.springsecuritydemoservice.exception.custom.UserNotFoundException;
 
 import com.example.springsecuritydemoservice.exception.custom.WrongPasswordException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -40,6 +41,12 @@ public class BaseExceptionHandler {
         return getErrorResponse(exception.getMessage());
     }
 
+    @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ErrorResponse usernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
+        return getErrorResponse(exception.getMessage());
+    }
+
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(WrongPasswordException.class)
     public ErrorResponse wrongPasswordExceptionHandler(WrongPasswordException exception) {
@@ -70,17 +77,18 @@ public class BaseExceptionHandler {
         return getErrorResponse(exception.getMessage());
     }
 
+    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ErrorResponse expiredJwtExceptionException(ExpiredJwtException exception) {
+        return getErrorResponse(exception.getMessage());
+    }
+
     @ResponseStatus(UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ErrorResponse authenticationExceptionHandler(AuthenticationException exception) {
         return getErrorResponse(exception.getMessage());
     }
 
-    @ResponseStatus(UNAUTHORIZED)
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ErrorResponse unauthorizedExceptionHandler(UsernameNotFoundException exception) {
-        return getErrorResponse(exception.getMessage());
-    }
 
     private ErrorResponse getErrorResponse(String message) {
         ErrorResponse errorResponse = new ErrorResponse(message);

@@ -2,8 +2,11 @@ package com.example.springsecuritydemoservice.config;
 
 import com.example.springsecuritydemoservice.exception.ErrorResponse;
 import com.example.springsecuritydemoservice.service.JwtService;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,6 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.getWriter().write(convertObjectToJson(getErrorResponse(e.getMessage())));
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.getWriter().write(convertObjectToJson(getErrorResponse(e.getMessage())));
