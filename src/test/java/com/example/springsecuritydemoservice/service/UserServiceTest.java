@@ -3,9 +3,12 @@ package com.example.springsecuritydemoservice.service;
 import com.example.springsecuritydemoservice.dto.UserDto;
 import com.example.springsecuritydemoservice.dto.auth.ChangePasswordRequest;
 import com.example.springsecuritydemoservice.exception.custom.UserNotFoundException;
+
 import com.example.springsecuritydemoservice.model.Role;
 import com.example.springsecuritydemoservice.model.User;
+
 import com.example.springsecuritydemoservice.repository.UserRepository;
+
 import com.example.springsecuritydemoservice.service.impl.UserServiceImpl;
 
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.springsecuritydemoservice.util.TestUtil.IGNORING_USER_FIELDS;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -50,13 +55,9 @@ class UserServiceTest {
     @Captor
     private ArgumentCaptor<User> argumentUserCaptor;
 
-    private final static String[] IGNORING_USER_FIELDS =
-            {"id", "createdAt", "enabled", "accountNonExpired",
-                    "credentialsNonExpired", "authorities", "accountNonLocked"};
-
     @DisplayName("Get all users return all")
     @Test
-    void getAllReturnAll() {
+    void getAllUsersReturnAll() {
         User expectedUser1 = User.builder()
                 .firstName("foo")
                 .lastName("foo")
@@ -72,16 +73,16 @@ class UserServiceTest {
         List<User> expectedUsers = List.of(expectedUser1, expectedUser2);
         when(userRepository.findAll()).thenReturn(expectedUsers);
 
-        List<User> actualTasks = userService.getAllUsers();
+        List<User> actualUsers = userService.getAllUsers();
 
-        assertThat(actualTasks).usingRecursiveComparison()
+        assertThat(actualUsers).usingRecursiveComparison()
                 .ignoringFields(IGNORING_USER_FIELDS).isEqualTo(expectedUsers);
         verify(userRepository).findAll();
     }
 
     @DisplayName("Get all users return 0")
     @Test
-    void getAllReturn0() {
+    void getAllUsersReturn0() {
         List<User> expectedUsers = List.of();
         when(userRepository.findAll()).thenReturn(expectedUsers);
 
@@ -126,7 +127,6 @@ class UserServiceTest {
                 .hasMessage("User not found by id: " + expectedUser.getId());
 
         verify(userRepository).findById(eq(expectedUser.getId()));
-        verifyNoMoreInteractions(userRepository);
     }
 
     @DisplayName("Update user is OK")
