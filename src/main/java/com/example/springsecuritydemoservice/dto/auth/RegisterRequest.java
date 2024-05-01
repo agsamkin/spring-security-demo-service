@@ -14,11 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RegisterRequest {
-    @JsonProperty("firstname")
     @NotBlank(message = "First name should not be empty")
     private String firstName;
 
-    @JsonProperty("lastname")
     @NotBlank(message = "Last name should not be empty")
     private String lastName;
 

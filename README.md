@@ -19,8 +19,8 @@ POST http://localhost:8081/api/v1/auth/register
 BODY:
 ```json
 {
-  "firstname": "foo",
-  "lastname": "bar",
+  "firstName": "foo",
+  "lastName": "bar",
   "username": "foobar@gmail.com",
   "password": "123"
 }
